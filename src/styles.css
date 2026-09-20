@@ -27,32 +27,34 @@ body {
   pointer-events: none;
 }
 
-.controls-row {
+.state-control {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  pointer-events: auto;
-}
-
-.controls button {
-  padding: 12px 20px;
-  border: none;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
   border-radius: 999px;
   background: #fff;
   color: #111;
   font-size: 15px;
   font-weight: 600;
-  cursor: pointer;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-  white-space: nowrap;
+  pointer-events: auto;
 }
 
-.controls button:hover:not(:disabled) {
-  background: #f0f0f0;
+.state-control input {
+  width: 72px;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
 }
 
-.controls button:disabled {
+.state-control input:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+#state-value {
+  min-width: 1.5ch;
 }

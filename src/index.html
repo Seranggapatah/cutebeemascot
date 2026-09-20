@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Rive (JS) Quick Start</title>
+    <title>Cute Bee Rive</title>
     <meta charset="UTF-8" />
   </head>
 
@@ -9,18 +9,17 @@
     <canvas id="rive-canvas"></canvas>
 
     <div class="controls">
-      <div class="controls-row">
-        <button id="swap-head-btn" type="button" disabled>Head Swap</button>
-        <button id="swap-body-back-btn" type="button" disabled>Body Back Swap</button>
-        <button id="swap-body-front-btn" type="button" disabled>Body Front Swap</button>
-        <button id="swap-image-btn" type="button" disabled>Hat Swap</button>
-        <button id="swap-shirt-btn" type="button" disabled>Shirt Swap</button>
-        <button id="swap-boot-btn" type="button" disabled>Boot Swap</button>
-      </div>
-      <div class="controls-row">
-        <button id="idle-image-btn" type="button" disabled>Weaving</button>
-        <button id="celebrate-image-btn" type="button" disabled>Celebrate</button>
-      </div>
+      <label class="state-control" for="state-input">
+        <span>state</span>
+        <input
+          id="state-input"
+          type="number"
+          step="1"
+          value="0"
+          disabled
+        />
+        <span id="state-value">0</span>
+      </label>
     </div>
 
     <script src="./index.ts" type="module"></script>
