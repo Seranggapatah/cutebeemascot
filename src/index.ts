@@ -1,29 +1,38 @@
 /*
   Load cute_bee.riv
   Artboard: Artboard
-  ViewModel number: state
+  ViewModel enum: state
 */
 
 import "./styles.css";
 import { Fit, Rive, Layout } from "@rive-app/webgl2";
 
-interface NumberProperty {
-  value: number;
+interface EnumProperty {
+  value: string;
+  values?: string[];
 }
 
 interface ViewModelInstance {
-  number(name: string): NumberProperty;
+  enum(name: string): EnumProperty;
 }
+
+const STATE_ENUMS = [
+  "bravo",
+  "congrat",
+  "cry",
+  "idle",
+  "idle2",
+  "idleTalk",
+] as const;
 
 const layout = new Layout({
   fit: Fit.Contain,
 });
 
 const riveCanvas = document.getElementById("rive-canvas") as HTMLCanvasElement;
-const stateInput = document.getElementById("state-input") as HTMLInputElement;
-const stateValueLabel = document.getElementById(
-  "state-value",
-) as HTMLSpanElement;
+const stateButtons = document.getElementById(
+  "state-buttons",
+) as HTMLDivElement;
 
 const riveSrc = new URL("./cute_bee.riv", import.meta.url).href;
 
@@ -40,9 +49,10 @@ const logDebug = (
   console.log(`[${time}] [${label}] ${message}`);
 };
 
-const setStateUi = (value: number): void => {
-  stateInput.value = String(value);
-  stateValueLabel.textContent = String(value);
+const setActiveButton = (value: string): void => {
+  stateButtons.querySelectorAll("button").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.state === value);
+  });
 };
 
 const r = new Rive({
@@ -63,32 +73,42 @@ const r = new Rive({
       return;
     }
 
-    let stateProperty: NumberProperty | null = null;
+    let stateProperty: EnumProperty | null = null;
     try {
-      stateProperty = vmi.number("state");
+      stateProperty = vmi.enum("state");
     } catch (error) {
-      console.error('Failed to bind ViewModel number "state":', error);
+      console.error('Failed to bind ViewModel enum "state":', error);
     }
 
     if (!stateProperty) {
-      console.error('ViewModel number "state" not found');
+      console.error('ViewModel enum "state" not found');
       return;
     }
 
-    logDebug("VM Bind", 'number "state" OK', { value: stateProperty.value });
-    setStateUi(stateProperty.value);
-    stateInput.disabled = false;
+    const enumValues =
+      stateProperty.values && stateProperty.values.length > 0
+        ? stateProperty.values
+        : [...STATE_ENUMS];
 
-    stateInput.addEventListener("input", () => {
-      const nextValue = Number(stateInput.value);
-      if (Number.isNaN(nextValue)) {
-        return;
-      }
-
-      stateProperty.value = nextValue;
-      stateValueLabel.textContent = String(nextValue);
-      logDebug("State", "ViewModel number updated", { value: nextValue });
+    logDebug("VM Bind", 'enum "state" OK', {
+      value: stateProperty.value,
+      values: enumValues,
     });
+
+    enumValues.forEach((value) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.dataset.state = value;
+      button.textContent = value;
+      button.addEventListener("click", () => {
+        stateProperty.value = value;
+        setActiveButton(value);
+        logDebug("State", "ViewModel enum updated", { value });
+      });
+      stateButtons.append(button);
+    });
+
+    setActiveButton(stateProperty.value);
   },
   onLoadError: (error): void => {
     console.error("Failed to load cute_bee.riv:", error);
